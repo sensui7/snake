@@ -1,19 +1,10 @@
 #include "game.hpp"
 
-Game::Game()
-{
+SDL_Rect dest;
 
-}
+Game::Game() : _isRunning(false), _renderer(nullptr), _window(nullptr), _snake(nullptr) {}
 
-Game::~Game()
-{
-
-}
-
-void Game::error(std::string errorMsg)
-{
-	std::cout << errorMsg << " SDL Error: " << SDL_GetError() << "\n";	
-}
+Game::~Game() {}
 
 bool Game::init()
 {
@@ -28,8 +19,8 @@ bool Game::init()
 
 	// Create window
 	_window = SDL_CreateWindow("Snake", 
-							   SDL_WINDOWPOS_UNDEFINED, 
-							   SDL_WINDOWPOS_UNDEFINED,
+							   SDL_WINDOWPOS_CENTERED, 
+							   SDL_WINDOWPOS_CENTERED,
 							   SCREEN_WIDTH,
 							   SCREEN_HEIGHT,
 							   SDL_WINDOW_SHOWN);
@@ -51,10 +42,19 @@ bool Game::init()
 
 	_isRunning = true;
 
+	// Set size, and load its texture from starting bmp
+	_snake = std::make_shared<Snake>(Snake(10,10,10,10));
+	_snake -> setTexture(_renderer, "lil_snake.bmp");
+	if (_snake -> getTexture() == nullptr) 
+	{
+		error("Couldn't set texture of snake!");
+		return !success;
+	}
+
 	return success;
 }
 
-void Game::handleEvents()
+void Game::processInput()
 {
 	SDL_Event event;
 	SDL_PollEvent(&event);
@@ -71,7 +71,10 @@ void Game::handleEvents()
 
 void Game::update()
 {
-
+	++i;
+	dest.w = 60;
+	dest.h = 20;
+	dest.x = i;
 }
 
 // Reference: https://wiki.libsdl.org/SDL_RenderPresent
@@ -79,6 +82,10 @@ void Game::render()
 {
 	// Clear current rendering target with drawing color
 	SDL_RenderClear(_renderer);
+
+	// Copy portion of texture to render target
+	SDL_RenderCopy(_renderer, _snake -> getTexture(), nullptr, &dest);
+
 	// Update screen with any rendering performed since previous call
 	SDL_RenderPresent(_renderer);
 }
@@ -92,4 +99,9 @@ void Game::close()
 
 	// Quit SDL subsystems
 	SDL_Quit();
+}
+
+void Game::error(std::string errorMsg)
+{
+	std::cout << errorMsg << " SDL Error: " << SDL_GetError() << "\n";	
 }
