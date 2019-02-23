@@ -1,10 +1,12 @@
 #include "game.hpp"
 
-SDL_Rect dest;
-
 Game::Game() : _isRunning(false), _renderer(nullptr), _window(nullptr), _snake(nullptr) {}
 
-Game::~Game() {}
+Game::~Game() 
+{ 
+	SDL_DestroyTexture(gameState.snakeTexture);
+	SDL_DestroyTexture(gameState.foodTexture);
+}
 
 bool Game::init()
 {
@@ -43,13 +45,19 @@ bool Game::init()
 	_isRunning = true;
 
 	// Set size, and load its texture from starting bmp
-	_snake = std::make_shared<Snake>(Snake(10,10,10,10));
+	
+	_snake = std::make_shared<Snake>(Snake(40, 40));
+	gameState.snakeTexture = TextureLoader::loadTexture("lil_snake.bmp", _renderer);
+	_food = std::make_shared<Food>(Food(200, 300));
+	gameState.foodTexture = TextureLoader::loadTexture("some_food.bmp", _renderer);
+	/*
 	_snake -> setTexture(_renderer, "lil_snake.bmp");
 	if (_snake -> getTexture() == nullptr) 
 	{
 		error("Couldn't set texture of snake!");
 		return !success;
 	}
+	*/
 
 	return success;
 }
@@ -59,22 +67,27 @@ void Game::processInput()
 	SDL_Event event;
 	SDL_PollEvent(&event);
 
-	switch(event.type)
+	if (event.type == SDL_QUIT) 
 	{
-		case SDL_QUIT:
-			_isRunning = false;
-			break;
-		default:
-			break;
+		_isRunning = false;
+	}
+
+	// Actions for player
+	if (event.type == SDL_KEYDOWN) 
+	{
+		switch (event.key.keysym.sym)
+		{
+			case SDLK_UP: _snake -> setDir(UP); break;
+			case SDLK_DOWN: _snake -> setDir(DOWN); break;
+			case SDLK_LEFT: _snake -> setDir(LEFT); break;
+			case SDLK_RIGHT: _snake -> setDir(RIGHT); break;
+		}
 	}
 }
 
 void Game::update()
 {
-	++i;
-	dest.w = 60;
-	dest.h = 20;
-	dest.x = i;
+	_snake -> move();
 }
 
 // Reference: https://wiki.libsdl.org/SDL_RenderPresent
@@ -84,7 +97,8 @@ void Game::render()
 	SDL_RenderClear(_renderer);
 
 	// Copy portion of texture to render target
-	SDL_RenderCopy(_renderer, _snake -> getTexture(), nullptr, &dest);
+	SDL_RenderCopy(_renderer, gameState.snakeTexture, nullptr, &(_snake -> getRect()));
+	SDL_RenderCopy(_renderer, gameState.foodTexture, nullptr, &(_food -> getRect()));
 
 	// Update screen with any rendering performed since previous call
 	SDL_RenderPresent(_renderer);

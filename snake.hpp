@@ -6,30 +6,58 @@
 #include <string>
 #include <list>
 
+const int DEFAULT_WIDTH = 20;
+const int DEFAULT_HEIGHT = 20;
+
+enum dir {
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
+};
+
 class Snake
 {
 	public:
-		Snake(int32_t pX, int32_t pY, int32_t vX, int32_t vY) : _posX(pX), _posY(pY), _velX(vX), _velY(vY), _texture(nullptr) {}
-		Snake() { SDL_DestroyTexture(_texture); }
-		~Snake() {}
-
-		SDL_Texture* getTexture()
+		Snake(int32_t pX, int32_t pY) : _direction(RIGHT)
 		{
-			return _texture;
+			_rect.w = DEFAULT_WIDTH;
+			_rect.h = DEFAULT_HEIGHT;
+			_rect.x = pX;
+			_rect.y = pY;
+
+			_body.push_front(_rect);
 		}
 
-		void setTexture(SDL_Renderer*& renderer, const std::string& resource)
+		~Snake() {}
+
+		SDL_Rect& getRect() { return _rect; }
+
+		void setDir(uint32_t d) { _direction = d; }
+
+		void move()
 		{
-			SDL_Surface* tmpSurface = IMG_Load(resource.c_str());
-			_texture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
-			SDL_FreeSurface(tmpSurface);
+			switch(_direction)
+			{
+				case UP:
+					_rect.y -= 4;
+					break;
+				case DOWN:
+					_rect.y += 4;
+					break;
+				case LEFT:
+					_rect.x -= 4;
+					break;
+				case RIGHT:
+					_rect.x += 4;
+					break;
+			}
 		}
 			
 	private:
-		int32_t _posX, _posY;
-		int32_t _velX, _velY;	
-
-		SDL_Texture* _texture;
+		uint32_t _direction;	
+		SDL_Rect _rect;
+		std::list<SDL_Rect> _body;
 };
 
 #endif
