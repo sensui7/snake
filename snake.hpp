@@ -1,3 +1,9 @@
+/*
+	Steven Tran
+	CS410: C++
+	Final Project
+*/
+
 #ifndef SNAKE
 #define SNAKE
 
@@ -9,55 +15,43 @@
 const int DEFAULT_WIDTH = 20;
 const int DEFAULT_HEIGHT = 20;
 
-enum dir {
+enum dir 
+{
 	UP,
 	DOWN,
 	LEFT,
 	RIGHT
 };
 
+struct snakeParts
+{
+	SDL_Rect part;
+	dir direction;
+};
+
+/*
+	This class manages the position and size of the snake.
+	A list (linear-linked list) is used to manage the body
+	of the snake.
+*/
 class Snake
 {
 	public:
-		Snake(int32_t pX, int32_t pY) : _direction(RIGHT)
-		{
-			_rect.w = DEFAULT_WIDTH;
-			_rect.h = DEFAULT_HEIGHT;
-			_rect.x = pX;
-			_rect.y = pY;
+		Snake(int32_t pX, int32_t pY);
+		~Snake();
 
-			_body.push_front(_rect);
-		}
+		SDL_Rect& getHead();
+		std::list<snakeParts>& getAll();
 
-		~Snake() {}
-
-		SDL_Rect& getRect() { return _rect; }
-
-		void setDir(uint32_t d) { _direction = d; }
-
-		void move()
-		{
-			switch(_direction)
-			{
-				case UP:
-					_rect.y -= 4;
-					break;
-				case DOWN:
-					_rect.y += 4;
-					break;
-				case LEFT:
-					_rect.x -= 4;
-					break;
-				case RIGHT:
-					_rect.x += 4;
-					break;
-			}
-		}
+		bool checkSelfCollision();
+		dir getCurrDir();
+		void setDir(dir d);
+		void move();
+		void grow();
+		void restart();
 			
 	private:
-		uint32_t _direction;	
-		SDL_Rect _rect;
-		std::list<SDL_Rect> _body;
+		std::list<snakeParts> _body;
 };
 
 #endif

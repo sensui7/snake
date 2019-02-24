@@ -3,24 +3,19 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <cstdlib>
+#include <iostream>
 
 class Food
 {
 	public:
-		Food(int32_t pX, int32_t pY) 
-		{
-			_food.x = pX;
-			_food.y = pY;
-			_food.w = DEFAULT_WIDTH;
-			_food.h = DEFAULT_HEIGHT;
-		}
+		Food(int32_t pX, int32_t pY);
+		~Food();
 
-		SDL_Rect& getRect()
-		{
-			return _food;
-		}
-
-		~Food() {}
+		int roundToNearestMultiple20(int n, int limit);
+		SDL_Rect& getFood();
+		void newLocation();
+		void restart();
 
 	private:
 		SDL_Rect _food;	

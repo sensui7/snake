@@ -1,11 +1,12 @@
 #include "game.hpp"
 
-Game::Game() : _isRunning(false), _renderer(nullptr), _window(nullptr), _snake(nullptr) {}
+Game::Game() : _isRunning(false), _renderer(nullptr), _window(nullptr), _font(nullptr), _snake(nullptr), _food(nullptr) {}
 
 Game::~Game() 
 { 
 	SDL_DestroyTexture(gameState.snakeTexture);
 	SDL_DestroyTexture(gameState.foodTexture);
+	SDL_DestroyTexture(gameState.ttfTexture);
 }
 
 bool Game::init()
@@ -40,28 +41,40 @@ bool Game::init()
 		return !success;
 	}
 
+	// Set color usedf or drawing operations (Rect, Line, & Clear)
 	SDL_SetRenderDrawColor(_renderer, 0xff, 0xff, 0xff, 0xff);
 
 	_isRunning = true;
 
-	// Set size, and load its texture from starting bmp
-	
-	_snake = std::make_shared<Snake>(Snake(40, 40));
-	gameState.snakeTexture = TextureLoader::loadTexture("lil_snake.bmp", _renderer);
-	_food = std::make_shared<Food>(Food(200, 300));
-	gameState.foodTexture = TextureLoader::loadTexture("some_food.bmp", _renderer);
-	/*
-	_snake -> setTexture(_renderer, "lil_snake.bmp");
-	if (_snake -> getTexture() == nullptr) 
+	// Initialize SDL_ttf
+	if (TTF_Init() == -1)
 	{
-		error("Couldn't set texture of snake!");
+		errorTTF("SDL_ttf couldn't be initialized!");
 		return !success;
 	}
-	*/
+
+	// Open the font
+	_font = TTF_OpenFont("courier_new.ttf", 30);
+	if (_font == nullptr)
+	{
+		errorTTF("Failed to load font!");
+		return !success;
+	}
+
+	// Set the font texture when player loses
+	gameState.ttfTexture = TextureLoader::loadTextureTTF(_font, "Game Over (Press Space to Restart)", _renderer);
+
+	// Set coordinates for game objects and load their images as textures
+	_snake = std::make_shared<Snake>(Snake(40, 40));
+	gameState.snakeTexture = TextureLoader::loadTexture("lil_snake.bmp", _renderer);
+
+	_food = std::make_shared<Food>(Food(200, 300));
+	gameState.foodTexture = TextureLoader::loadTexture("some_food.bmp", _renderer);
 
 	return success;
 }
 
+// Process the controls the user inputs
 void Game::processInput()
 {
 	SDL_Event event;
@@ -77,28 +90,62 @@ void Game::processInput()
 	{
 		switch (event.key.keysym.sym)
 		{
-			case SDLK_UP: _snake -> setDir(UP); break;
-			case SDLK_DOWN: _snake -> setDir(DOWN); break;
-			case SDLK_LEFT: _snake -> setDir(LEFT); break;
-			case SDLK_RIGHT: _snake -> setDir(RIGHT); break;
+			case SDLK_UP: if (_snake -> getCurrDir() != DOWN) _snake -> setDir(UP); break;
+			case SDLK_DOWN: if (_snake -> getCurrDir() != UP) _snake -> setDir(DOWN); break;
+			case SDLK_LEFT: if (_snake -> getCurrDir() != RIGHT) _snake -> setDir(LEFT); break;
+			case SDLK_RIGHT: if (_snake -> getCurrDir() != LEFT) _snake -> setDir(RIGHT); break;
+			case SDLK_SPACE:
+				_snake -> restart(); 
+				_food -> restart();
+				gameState.gameOver = false;
+				break;
 		}
 	}
 }
 
+// Update the game state
 void Game::update()
 {
+	if (gameState.gameOver) return;
+
 	_snake -> move();
+	gameState.gameOver = _snake -> checkSelfCollision();
+
+	SDL_Rect s = _snake -> getHead(), f = _food -> getFood();
+
+	if (s.y == f.y && s.x == f.x)
+	{
+		_snake -> grow();
+		_food -> newLocation();
+	}
 }
 
 // Reference: https://wiki.libsdl.org/SDL_RenderPresent
+// Render the updated game components onto the screen
 void Game::render()
 {
 	// Clear current rendering target with drawing color
 	SDL_RenderClear(_renderer);
 
+	// Render the snake head to tail {head ... tail}
+	auto tmp = _snake -> getAll();
+	for (auto i = tmp.begin(); i != tmp.end(); ++i)
+	{
+		SDL_RenderCopy(_renderer, gameState.snakeTexture, nullptr, &((*i).part));
+	}
+
 	// Copy portion of texture to render target
-	SDL_RenderCopy(_renderer, gameState.snakeTexture, nullptr, &(_snake -> getRect()));
-	SDL_RenderCopy(_renderer, gameState.foodTexture, nullptr, &(_food -> getRect()));
+	SDL_RenderCopy(_renderer, gameState.foodTexture, nullptr, &(_food -> getFood()));
+
+	if (gameState.gameOver)
+	{
+		int tw = 0, th = 0;
+
+		// Get attributes of ttf texture (width and height)
+		SDL_QueryTexture(gameState.ttfTexture, nullptr, nullptr, &tw, &th);
+		SDL_Rect ds = {TEXT_W_OFFSET, SCREEN_HEIGHT/2 - TEXT_H_OFFSET, tw, th};
+		SDL_RenderCopy(_renderer, gameState.ttfTexture, nullptr, &ds);
+	}
 
 	// Update screen with any rendering performed since previous call
 	SDL_RenderPresent(_renderer);
@@ -110,12 +157,20 @@ void Game::close()
 	_window = nullptr;
 	SDL_DestroyRenderer(_renderer);
 	_renderer = nullptr;
+	TTF_CloseFont(_font);
+	_font = nullptr;
 
 	// Quit SDL subsystems
 	SDL_Quit();
+	TTF_Quit();
 }
 
 void Game::error(std::string errorMsg)
 {
 	std::cout << errorMsg << " SDL Error: " << SDL_GetError() << "\n";	
+}
+
+void Game::errorTTF(std:: string errorMsg)
+{
+	std::cout << errorMsg << " SDL Error: " << TTF_GetError() << "\n";	
 }

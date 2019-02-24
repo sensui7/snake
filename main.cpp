@@ -8,11 +8,10 @@
 #include <iostream>
 #include <memory>
 
-// Type alias (c++11)
 using gamePtr = std::shared_ptr<Game>;
 
 // Capping the frames per second
-const int FPS = 60;
+const int FPS = 30;
 const int frameDelay = 1000 / FPS;
 
 // Reference: http://gameprogrammingpatterns.com/game-loop.html
@@ -31,7 +30,8 @@ int main (int argc, char * argv[])
 		game -> render();
 		frameEnd = SDL_GetTicks();
 
-		// Delay the difference to get 60 FPS
+		// Delay the difference to get 30 FPS
+		// Each frame is expected to run ~33.33 ms and not any faster 
 		frameDuration = frameEnd - frameStart;
 		if (frameDelay > frameDuration)
 		{
