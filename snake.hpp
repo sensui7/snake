@@ -12,8 +12,8 @@
 #include <string>
 #include <list>
 
-const int DEFAULT_WIDTH = 20;
-const int DEFAULT_HEIGHT = 20;
+const int DEFAULT_SNAKE_WIDTH = 20;
+const int DEFAULT_SNAKE_HEIGHT = 20;
 
 enum dir 
 {

@@ -1,11 +1,16 @@
+/*
+	Steven Tran
+	CS410
+	Final Project
+*/
 #include "food.hpp"
 
 Food::Food(int32_t pX, int32_t pY)
 {
 	_food.x = pX;
 	_food.y = pY;
-	_food.w = 20;
-	_food.h = 20;
+	_food.w = DEFAULT_FOOD_WIDTH;
+	_food.h = DEFAULT_FOOD_HEIGHT;
 }
 
 Food::~Food() {}
@@ -26,11 +31,11 @@ int Food::roundToNearestMultiple20(int n, int limit)
 
 void Food::newLocation()
 {
-	auto newX = (rand() % 800);
-	auto newY = (rand() % 500);
+	auto newX = (rand() % GAME_WINDOWX);
+	auto newY = (rand() % GAME_WINDOWY);
 
-	_food.x = roundToNearestMultiple20(newX, 800);
-	_food.y = roundToNearestMultiple20(newY, 500);
+	_food.x = roundToNearestMultiple20(newX, GAME_WINDOWX);
+	_food.y = roundToNearestMultiple20(newY, GAME_WINDOWY);
 }
 
 SDL_Rect& Food::getFood()
@@ -40,6 +45,6 @@ SDL_Rect& Food::getFood()
 
 void Food::restart()
 {
-	_food.x = 200;
-	_food.y = 300;
+	_food.x = DEFAULT_FOOD_POSX;
+	_food.y = DEFAULT_FOOD_POSY;
 }

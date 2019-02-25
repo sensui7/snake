@@ -1,3 +1,9 @@
+/*
+	Steven Tran
+	CS410
+	Final Project
+*/
+
 #ifndef TEXTURE_LOADER
 #define TEXTURE_LOADER
 
@@ -12,7 +18,7 @@ class TextureLoader
 		{
 			SDL_Surface* tmpSurface = IMG_Load(fileName.c_str());							
 
-			/*
+			/* Optional way to set transparent background for the surface
 			uint32_t colorKey = SDL_MapRGB(tmpSurface -> format, 0, 0, 0);
 			SDL_SetColorKey(tmpSurface, SDL_TRUE, colorKey);
 			*/

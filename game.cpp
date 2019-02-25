@@ -1,3 +1,9 @@
+/*
+	Steven Tran
+	CS410
+	Final Project
+*/
+
 #include "game.hpp"
 
 Game::Game() : _isRunning(false), _renderer(nullptr), _window(nullptr), _font(nullptr), _snake(nullptr), _food(nullptr) {}
@@ -54,7 +60,7 @@ bool Game::init()
 	}
 
 	// Open the font
-	_font = TTF_OpenFont("courier_new.ttf", 30);
+	_font = TTF_OpenFont("fonts/courier_new.ttf", 30);
 	if (_font == nullptr)
 	{
 		errorTTF("Failed to load font!");
@@ -66,10 +72,10 @@ bool Game::init()
 
 	// Set coordinates for game objects and load their images as textures
 	_snake = std::make_shared<Snake>(Snake(40, 40));
-	gameState.snakeTexture = TextureLoader::loadTexture("lil_snake.bmp", _renderer);
+	gameState.snakeTexture = TextureLoader::loadTexture("resources/lil_snake.bmp", _renderer);
 
 	_food = std::make_shared<Food>(Food(200, 300));
-	gameState.foodTexture = TextureLoader::loadTexture("some_food.bmp", _renderer);
+	gameState.foodTexture = TextureLoader::loadTexture("resources/some_food.bmp", _renderer);
 
 	return success;
 }

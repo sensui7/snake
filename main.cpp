@@ -10,7 +10,7 @@
 
 using gamePtr = std::shared_ptr<Game>;
 
-// Capping the frames per second
+// Capping the frames per second to 30
 const int FPS = 30;
 const int frameDelay = 1000 / FPS;
 

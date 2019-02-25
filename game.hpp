@@ -1,3 +1,9 @@
+/*
+	Steven Tran
+	CS410
+	Final Project
+*/
+
 #ifndef GAME
 #define GAME
 

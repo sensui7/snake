@@ -1,10 +1,16 @@
+/*
+	Steven Tran
+	CS410
+	Final Project
+*/
+
 #include "snake.hpp"
 
 Snake::Snake(int32_t pX, int32_t pY)
 {
 	SDL_Rect tmp;
-	tmp.w = DEFAULT_WIDTH;
-	tmp.h = DEFAULT_HEIGHT;
+	tmp.w = DEFAULT_SNAKE_WIDTH;
+	tmp.h = DEFAULT_SNAKE_HEIGHT;
 	tmp.x = pX;
 	tmp.y = pY;
 
@@ -17,6 +23,7 @@ Snake::Snake(int32_t pX, int32_t pY)
 Snake::~Snake() {}
 
 SDL_Rect& Snake::getHead() { return _body.front().part; }
+
 std::list<snakeParts>& Snake::getAll() { return _body; }
 
 void Snake::setDir(dir d)
@@ -74,7 +81,8 @@ void Snake::move()
 // and then attach a new part behind it. Since this comes
 // after the call to move in Game::update(), the snake
 // is one part ahead w.r.t. to the current direction.
-// Thus, the copy of the tail is the previous snapshot.
+// Thus, the copy of the tail is the previous snapshot
+// (one block before).
 void Snake::grow()
 {
 	auto snakeTail = _body.back();
@@ -99,6 +107,7 @@ void Snake::grow()
 	snakeParts sp;
 	sp.part = tail;
 	sp.direction = direction; 
+
 	_body.push_back(sp);
 }
 
