@@ -9,6 +9,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <memory>
@@ -17,12 +18,19 @@
 #include "snake.hpp"
 #include "food.hpp"
 
+// Defaults for window
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 500;
 
 // Offset used to position game over text in center
 const int TEXT_W_OFFSET = 100;
 const int TEXT_H_OFFSET = 25;
+
+// Default positions for game pieces
+const int SNAKE_X_OFFSET = 100;
+const int SNAKE_Y_OFFSET = 100;
+const int FOOD_X_OFFSET = 200;
+const int FOOD_Y_OFFSET = 200;
 
 using snakePtr = std::shared_ptr<Snake>;
 using foodPtr = std::shared_ptr<Food>;
@@ -58,6 +66,7 @@ class Game
 		SDL_Renderer* _renderer;
 		SDL_Window* _window;
 		TTF_Font* _font;
+		Mix_Chunk* eatApple;
 
 		state gameState;
 		snakePtr _snake;

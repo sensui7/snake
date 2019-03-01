@@ -11,18 +11,18 @@
 #include <SDL2/SDL_ttf.h>
 #include <string>
 
+/*
+	This class deals with loading the images as
+	textures (works with VRAM). Hardware rendering
+	usually yields better performance than software
+	rendering.
+*/
 class TextureLoader
 {
 	public:
 		static SDL_Texture* loadTexture(const std::string& fileName, SDL_Renderer* renderer)
 		{
 			SDL_Surface* tmpSurface = IMG_Load(fileName.c_str());							
-
-			/* Optional way to set transparent background for the surface
-			uint32_t colorKey = SDL_MapRGB(tmpSurface -> format, 0, 0, 0);
-			SDL_SetColorKey(tmpSurface, SDL_TRUE, colorKey);
-			*/
-
 			SDL_Texture* tmpTexture = SDL_CreateTextureFromSurface(renderer, tmpSurface);
 			SDL_FreeSurface(tmpSurface);
 			return tmpTexture;

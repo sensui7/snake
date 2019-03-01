@@ -19,6 +19,10 @@ const int DEFAULT_FOOD_POSY = 300;
 const int GAME_WINDOWX = 800;
 const int GAME_WINDOWY = 500;
 
+/*
+	This class manages the food that the snake eats.
+	It stores the rectangle to render for the food.
+*/
 class Food
 {
 	public:

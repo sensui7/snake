@@ -52,6 +52,19 @@ bool Game::init()
 
 	_isRunning = true;
 
+	// Initialize SDL_mixer
+	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
+	{
+		return !success;	
+	}
+
+	// Load the apple-eating sound effect
+	eatApple = Mix_LoadWAV("sounds/apple_bite.wav");
+	if (eatApple == nullptr)
+	{
+		return !success;
+	}
+
 	// Initialize SDL_ttf
 	if (TTF_Init() == -1)
 	{
@@ -71,10 +84,10 @@ bool Game::init()
 	gameState.ttfTexture = TextureLoader::loadTextureTTF(_font, "Game Over (Press Space to Restart)", _renderer);
 
 	// Set coordinates for game objects and load their images as textures
-	_snake = std::make_shared<Snake>(Snake(40, 40));
+	_snake = std::make_shared<Snake>(Snake(SNAKE_X_OFFSET, SNAKE_Y_OFFSET));
 	gameState.snakeTexture = TextureLoader::loadTexture("resources/lil_snake.bmp", _renderer);
 
-	_food = std::make_shared<Food>(Food(200, 300));
+	_food = std::make_shared<Food>(Food(FOOD_X_OFFSET, FOOD_Y_OFFSET));
 	gameState.foodTexture = TextureLoader::loadTexture("resources/some_food.bmp", _renderer);
 
 	return success;
@@ -121,6 +134,7 @@ void Game::update()
 
 	if (s.y == f.y && s.x == f.x)
 	{
+		if (Mix_PlayChannel(-1, eatApple, 0) == -1) return;
 		_snake -> grow();
 		_food -> newLocation();
 	}
@@ -165,6 +179,8 @@ void Game::close()
 	_renderer = nullptr;
 	TTF_CloseFont(_font);
 	_font = nullptr;
+	Mix_FreeChunk(eatApple);
+	eatApple = nullptr;
 
 	// Quit SDL subsystems
 	SDL_Quit();
