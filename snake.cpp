@@ -39,11 +39,11 @@ dir Snake::getCurrDir()
 
 /*
 The movement can be described as below:
-e.g. (0, 60), (0, 40), (0, 20) w/ RIGHT direction
+e.g. (0, 60), (0, DEFAULT_SNAKE_POS), (0, SNAKE_MOVE_DISTANCE) w/ RIGHT direction
 	 ^head			   ^tail
 
 Another movement to the right (0, 80) will result in
- (0, 80), (0, 60), (0, 40) w/ RIGHT direction
+ (0, 80), (0, 60), (0, DEFAULT_SNAKE_POS) w/ RIGHT direction
  ^ head			   ^tail
 */
 void Snake::move()
@@ -55,16 +55,16 @@ void Snake::move()
 	switch(direction)
 	{
 		case UP:
-				head.y = (head.y < 0) ? head.y + 500 : (head.y - 20) % 500;
+				head.y = (head.y < 0) ? head.y + DEFAULT_SCREEN_HEIGHT : (head.y - SNAKE_MOVE_DISTANCE) % DEFAULT_SCREEN_HEIGHT;
 			break;
 		case DOWN:
-				head.y = (head.y + 20) % 500;
+				head.y = (head.y + SNAKE_MOVE_DISTANCE) % DEFAULT_SCREEN_HEIGHT;
 			break;
 		case LEFT:
-				head.x = (head.x < 0) ? head.x + 800 : (head.x - 20) % 800;
+				head.x = (head.x < 0) ? head.x + DEFAULT_SCREEN_WIDTH : (head.x - SNAKE_MOVE_DISTANCE) % DEFAULT_SCREEN_WIDTH;
 			break;
 		case RIGHT:
-				head.x = (head.x + 20) % 800;
+				head.x = (head.x + SNAKE_MOVE_DISTANCE) % DEFAULT_SCREEN_WIDTH;
 			break;
 	}
 
@@ -92,16 +92,16 @@ void Snake::grow()
 	switch(direction)
 	{
 		case UP:
-				tail.y = (tail.y < 0) ? tail.y + 500 : (tail.y + 20) % 500;
+				tail.y = (tail.y < 0) ? tail.y + DEFAULT_SCREEN_HEIGHT : (tail.y + SNAKE_MOVE_DISTANCE) % DEFAULT_SCREEN_HEIGHT;
 			break;
 		case DOWN:
-				tail.y = (tail.y - 20) % 500;
+				tail.y = (tail.y - SNAKE_MOVE_DISTANCE) % DEFAULT_SCREEN_HEIGHT;
 			break;
 		case LEFT:
-				tail.x = (tail.x < 0) ? tail.x + 800 : (tail.x + 20) % 800;
+				tail.x = (tail.x < 0) ? tail.x + DEFAULT_SCREEN_WIDTH : (tail.x + SNAKE_MOVE_DISTANCE) % DEFAULT_SCREEN_WIDTH;
 			break;
 		case RIGHT:
-				tail.x = (tail.x - 20) % 800;
+				tail.x = (tail.x - SNAKE_MOVE_DISTANCE) % DEFAULT_SCREEN_WIDTH;
 	}
 
 	snakeParts sp;
@@ -133,6 +133,6 @@ bool Snake::checkSelfCollision()
 
 void Snake::restart()
 {
-	Snake newSnake(40, 40);
+	Snake newSnake(DEFAULT_SNAKE_POS, DEFAULT_SNAKE_POS);
 	*this = newSnake;
 }

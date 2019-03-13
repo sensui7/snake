@@ -14,6 +14,11 @@
 
 const int DEFAULT_SNAKE_WIDTH = 20;
 const int DEFAULT_SNAKE_HEIGHT = 20;
+const int SNAKE_MOVE_DISTANCE = 20;
+const int DEFAULT_SNAKE_POS = 100;
+
+const int DEFAULT_SCREEN_WIDTH = 800;
+const int DEFAULT_SCREEN_HEIGHT = 500;
 
 enum dir 
 {

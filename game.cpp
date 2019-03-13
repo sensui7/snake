@@ -187,12 +187,12 @@ void Game::close()
 	TTF_Quit();
 }
 
-void Game::error(std::string errorMsg)
+void Game::error(const std::string& errorMsg)
 {
 	std::cout << errorMsg << " SDL Error: " << SDL_GetError() << "\n";	
 }
 
-void Game::errorTTF(std:: string errorMsg)
+void Game::errorTTF(const std:: string& errorMsg)
 {
 	std::cout << errorMsg << " SDL Error: " << TTF_GetError() << "\n";	
 }

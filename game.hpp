@@ -72,8 +72,8 @@ class Game
 		snakePtr _snake;
 		foodPtr _food;
 
-		void error(std::string);
-		void errorTTF(std::string);
+		void error(const std::string&);
+		void errorTTF(const std::string&);
 };
 
 #endif
