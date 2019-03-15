@@ -104,7 +104,7 @@ void Game::processInput()
 		_isRunning = false;
 	}
 
-	// Actions for player
+	// Actions for the player
 	if (event.type == SDL_KEYDOWN) 
 	{
 		switch (event.key.keysym.sym)
@@ -132,6 +132,7 @@ void Game::update()
 
 	SDL_Rect s = _snake -> getHead(), f = _food -> getFood();
 
+	// Snake has eaten the food
 	if (s.y == f.y && s.x == f.x)
 	{
 		if (Mix_PlayChannel(-1, eatApple, 0) == -1) return;
@@ -171,6 +172,7 @@ void Game::render()
 	SDL_RenderPresent(_renderer);
 }
 
+// Deallocation for the SDL library
 void Game::close()
 {
 	SDL_DestroyWindow(_window);

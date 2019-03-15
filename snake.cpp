@@ -39,11 +39,11 @@ dir Snake::getCurrDir()
 
 /*
 The movement can be described as below:
-e.g. (0, 60), (0, DEFAULT_SNAKE_POS), (0, SNAKE_MOVE_DISTANCE) w/ RIGHT direction
+e.g. (0, 60), (0, 40), (0, 20) w/ RIGHT direction
 	 ^head			   ^tail
 
 Another movement to the right (0, 80) will result in
- (0, 80), (0, 60), (0, DEFAULT_SNAKE_POS) w/ RIGHT direction
+ (0, 80), (0, 60), (0, 40) w/ RIGHT direction
  ^ head			   ^tail
 */
 void Snake::move()
@@ -68,7 +68,10 @@ void Snake::move()
 			break;
 	}
 
+	// Get all of the snake body but the tail
 	std::list<snakeParts> newBody(_body.begin(), std::prev(_body.end(), 1));
+
+	// Update the entire body with the new direction/part
 	snakeParts sp;
 	sp.part = head;
 	sp.direction = direction; 
@@ -115,6 +118,7 @@ void Snake::grow()
 // If the head matches some part of the body, it's collided
 bool Snake::checkSelfCollision()
 {
+	// Get the element after the head
 	auto it = std::next(_body.cbegin(), 1);
 	SDL_Rect head = _body.front().part, tmp;
 
