@@ -12,7 +12,7 @@ using gamePtr = std::shared_ptr<Game>;
 
 // Capping the frames per second to 30
 const int FPS = 30;
-const int frameDelay = 1000 / FPS;
+const int FRAMEDELAY = 1000 / FPS;
 
 // Reference: http://gameprogrammingpatterns.com/game-loop.html
 int main (int argc, char * argv[]) 
@@ -33,9 +33,9 @@ int main (int argc, char * argv[])
 		// Delay the difference to get 30 FPS
 		// Each frame is expected to run ~33.33 ms and not any faster 
 		frameDuration = frameEnd - frameStart;
-		if (frameDelay > frameDuration)
+		if (FRAMEDELAY > frameDuration)
 		{
-			SDL_Delay(frameDelay - frameDuration);
+			SDL_Delay(FRAMEDELAY - frameDuration);
 		}
 	}
 

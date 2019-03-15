@@ -28,6 +28,7 @@ class TextureLoader
 			return tmpTexture;
 		}
 
+		// Used for the game over text
 		static SDL_Texture* loadTextureTTF(TTF_Font* text, const std::string& textStr, SDL_Renderer* renderer)
 		{
 			SDL_Color color = { 0xff, 0x00, 0x00 };
