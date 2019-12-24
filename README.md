@@ -12,3 +12,8 @@
 ## Without compiling
 - Execute `./snake` to run the existing game
 - Execute `make` to compile the game for the binary file
+
+## Resources Used
+- [What is an SDL Renderer?](https://stackoverflow.com/questions/21007329/what-is-an-sdl-renderer)
+- [Texture vs. Surface](https://stackoverflow.com/questions/21392755/difference-between-surface-and-texture-sdl-general)
+- [SDL Tutorials](http://lazyfoo.net/tutorials/SDL/)
